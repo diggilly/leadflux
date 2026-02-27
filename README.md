@@ -72,54 +72,102 @@ Built for marketing agencies, sales teams, and entrepreneurs who need to:
 ## 🏗️ Architecture
 
 ```
-LeadFlux/
+/home3/nyumban9/app.onhandi.com/
+│
 ├── app/
-│   ├── Core/
-│   │   ├── Controller.php      # Base controller with tenant helpers
-│   │   ├── Database.php        # PDO connection manager
-│   │   ├── Router.php          # URL routing engine
-│   │   ├── Logger.php          # Structured logging
-│   │   └── CSRF.php            # CSRF token management
-│   ├── Middleware/
-│   │   ├── Auth.php            # Authentication checks
-│   │   └── Tenant.php          # Multi-tenant isolation logic
 │   ├── Controllers/
-│   │   ├── AuthController.php      # Login, register, OTP
-│   │   ├── DashboardController.php # User dashboard (scoped)
-│   │   ├── LeadController.php      # Import & verification
-│   │   ├── ContactController.php   # Contact management
-│   │   ├── HistoryController.php   # Verification history
-│   │   ├── SettingsController.php  # User settings
-│   │   ├── DatabaseToolsController.php # Admin DB tools
-│   │   └── OnboardingController.php # Workspace setup
+│   │   ├── AuthController.php (handles login, register, OTP via middleware)
+│   │   ├── DashboardController.php
+│   │   ├── WhatsAppController.php
+│   │   ├── LeadController.php
+│   │   ├── CampaignController.php
+│   │   ├── ContactController.php
+│   │   ├── HistoryController.php
+│   │   ├── SettingsController.php
+│   │   ├── ProfileController.php
+│   │   ├── DatabaseController.php
+│   │   ├── CronController.php
+│   │   ├── NotificationController.php
+│   │   ├── DatabaseToolsController.php
+│   │   ├── OnboardingController.php
+│   │   ├── PromoteController.php
+│   │   └── TroubleshootController.php
+│   │
+│   ├── Middleware/
+│   │   ├── Auth.php (authentication middleware)
+│   │   └── Tenant.php (multi-tenant middleware)
+│   │
 │   ├── Models/
-│   │   ├── Lead.php            # Lead data operations
-│   │   └── Log.php             # Activity logging
+│   │   ├── Lead.php
+│   │   ├── Campaign.php
+│   │   ├── Contact.php
+│   │   └── Log.php
+│   │
 │   ├── Services/
-│   │   ├── WebsiteVerifier.php # Website availability checker
-│   │   └── NotificationService.php # Toast notification system
+│   │   ├── WhatsAppGateway.php
+│   │   ├── LeadProcessor.php
+│   │   ├── MessageTemplates.php
+│   │   ├── Campaign.php
+│   │   ├── ExportService.php
+│   │   └── WebsiteVerifier.php
+│   │
 │   ├── Views/
 │   │   ├── layouts/
-│   │   │   ├── main.php        # Master layout with sidebar/header
-│   │   │   └── auth.php        # Login/register layout
+│   │   │   ├── main.php (main dashboard layout)
+│   │   │   └── auth.php (login/register/OTP layout)
+│   │   │
 │   │   ├── dashboard/
+│   │   │   └── content.php (main dashboard content with WhatsApp)
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── login.php
+│   │   │   ├── register.php (if exists, or handled by middleware)
+│   │   │   └── verify-otp.php
+│   │   │
+│   │   ├── onboarding/
+│   │   │   └── index.php
+│   │   │
+│   │   ├── marketing/
+│   │   │   ├── verify.php (import & verify leads)
+│   │   │   ├── campaigns.php
+│   │   │   └── contacts.php
+│   │   │
+│   │   ├── settings/
+│   │   │   └── index.php
+│   │   │
+│   │   ├── profile/
+│   │   │   └── index.php
+│   │   │
+│   │   ├── history/
+│   │   │   └── index.php
+│   │   │
 │   │   ├── admin/
-│   │   └── ...                 # Page-specific views
-│   └── Console/                # CLI commands (future)
+│   │   │   └── database-tools.php
+│   │   │
+│   │   └── whatsapp/
+│   │       └── sessions.php (if separate page exists)
+│   │
+│   └── Core/
+│       ├── Controller.php (base controller with tenant methods)
+│       ├── Router.php
+│       ├── Database.php
+│       └── Logger.php
+│
 ├── public/
-│   ├── index.php               # Entry point
-│   ├── assets/                 # CSS, JS, images
-│   └── .htaccess               # URL rewriting
+│   ├── index.php (main entry point with .env loader)
+│   ├── .htaccess
+│   └── assets/ (CSS, JS, images)
+│
 ├── storage/
-│   ├── logs/                   # Application logs
-│   ├── cache/                  # Temporary files
-│   └── uploads/                # Imported files
-├── database/
-│   └── migrations.sql          # Schema definitions
-├── vendor/                     # Composer dependencies
-├── .env                        # Environment configuration
-├── artisan                     # CLI entry point
-└── README.md                   # This file
+│   ├── logs/
+│   │   └── app.log
+│   ├── cache/
+│   │   └── whatsapp/
+│   └── exports/
+│
+├── .env (environment variables)
+├── vendor/
+└── composer.json
 ```
 
 ### Data Flow
