@@ -185,6 +185,42 @@ Dashboard displays user's isolated data
 [Phase 3] WhatsAppGateway sends messages via onhandi.com API
 ```
 
+### whytatsapp integration 
+```
+✅ app/Messaging/WhatsAppGateway.php
+   - Full onhandi.com API client (number checker + message sender)
+   - Batch processing (100 numbers max per call)
+   - 24h result caching to avoid redundant API calls
+   - Error handling with retries
+
+✅ app/Services/LeadProcessor.php  
+   - Complete workflow: Verify → Qualify → Check WhatsApp → Send
+   - Anti-ban logic: 
+     • Random delay: sleep(rand(5,15)) between messages
+     • Batch cooldown: sleep(rand(120,300)) every 15 messages
+     • Daily limits: 30/day (new) / 70/day (warmed) tracked in DB
+     • Working hours: Only send 09:00-18:00 Africa/Nairobi
+   - Message rotation: Cycle 3-5 templates randomly via MessageRotator
+
+✅ app/Controllers/WhatsAppController.php
+   - AJAX endpoints: /api/whatsapp/status, /api/whatsapp/send-test
+   - Real-time progress updates for dashboard
+   - Session management for onhandi.com gateway
+
+✅ Updated Dashboard UI
+   - WhatsApp session status indicator (🟢 Connected / 🔴 Disconnected)
+   - "Send Test Message" button for qualified leads
+   - Live send progress with success/fail counters
+   - Anti-ban status panel (today's count, next allowed send time)
+
+✅ Message Templates (Your Business Logic)
+   • IF website WORKING → 
+     "Hi {name}, noticed your site is live! We offer maintenance, SEO, social media management. Interested?"
+   • IF website MISSING/NOT_WORKING → 
+     "Hi {name}, saw your business could use a professional website. We design affordable, mobile-friendly sites. Free consultation?"
+```
+
+
 ---
 
 ## 💻 Technology Stack
