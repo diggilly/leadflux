@@ -184,8 +184,42 @@ Dashboard displays user's isolated data
         ↓
 [Phase 3] WhatsAppGateway sends messages via onhandi.com API
 ```
+### qualified leads
+```
+📥 Qualified Leads (88 imported)
+│
+├─📱 STEP 1: WhatsApp Number Verification
+│  ├─ POST to https://tools.onhandi.com/api/number-checker/check
+│  ├─ Batch up to 100 numbers per API call
+│  ├─ Cache results for 24h to avoid redundant checks
+│  └─ ONLY proceed if response: {"isValid": true}
+│
+├─📨 STEP 2: Send Personalized Messages (Anti-Ban Protected)
+│  ├─ IF website WORKING → 
+│  │   "Hi {name}, noticed your site is live! We offer maintenance, SEO, social media management. Interested?"
+│  ├─ IF website MISSING/NOT_WORKING → 
+│  │   "Hi {name}, saw your business could use a professional website. We design affordable, mobile-friendly sites. Free consultation?"
+│  ├─ Anti-ban logic:
+│  │  • Random delay: sleep(rand(5,15)) between each message
+│  │  • Batch cooldown: sleep(rand(120,300)) after every 15 messages
+│  │  • Daily limits: 30/day (new number) / 70/day (warmed) tracked in DB
+│  │  • Working hours: Only send 09:00-18:00 Africa/Nairobi
+│  │  • Message rotation: Cycle 3-5 templates randomly
+│  └─ POST to https://tools.onhandi.com/api/sessions/{sessionId}/send
+│
+├─📊 STEP 3: Log & Track
+│  ├─ Log every action: WHATSAPP_CHECKED → MESSAGE_SENT/FAILED
+│  ├─ Store messageId for delivery tracking
+│  └─ Dashboard shows real-time progress via AJAX
+│
+└─🎛️ STEP 4: Dashboard Controls
+   ├─ WhatsApp session status indicator (🟢 Connected / 🔴 Disconnected)
+   ├─ "Send Test Message" button for manual triggers
+   ├─ Live send progress with success/fail counters
+   └─ Anti-ban status panel: "Today: X/30 sent • Next allowed: HH:MM"
+```
 
-### whytatsapp integration 
+### whatsapp integration 
 ```
 ✅ app/Messaging/WhatsAppGateway.php
    - Full onhandi.com API client (number checker + message sender)
