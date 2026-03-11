@@ -255,26 +255,10 @@ Dashboard displays user's isolated data
 ```
 
 
----
 
-## 💻 Technology Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Backend** | PHP 8.3+ | Server-side logic |
-| **Framework** | Custom MVC | Lightweight, no bloat |
-| **Database** | MySQL 8+/MariaDB | Data persistence |
-| **Frontend** | Bootstrap 5 + Vanilla JS | Responsive UI |
-| **HTTP Client** | cURL | External API calls |
-| **Excel Parsing** | PhpSpreadsheet | Import .xlsx/.csv files |
-| **Session Management** | Native PHP Sessions | Authentication state |
-| **Hosting** | Shared Hosting (cPanel) | Deployment target |
-| **WhatsApp API** | tools.onhandi.com | Message sending |
-
----
 
 ### 🚀 LeadFlux Public API - Complete File Structure & Code
-Great! Now let me give you the exact file structure and complete code for your API system.
+Great!  the exact file structure and complete code for your Lead flux API system.
 📁 Complete File Structure
 ```
 app.onhandi.com/
@@ -310,6 +294,24 @@ app.onhandi.com/
     └── logs/
         └── api.log                        ← API usage logs
 ```
+
+---
+
+## 💻 Technology Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Backend** | PHP 8.3+ | Server-side logic |
+| **Framework** | Custom MVC | Lightweight, no bloat |
+| **Database** | MySQL 8+/MariaDB | Data persistence |
+| **Frontend** | Bootstrap 5 + Vanilla JS | Responsive UI |
+| **HTTP Client** | cURL | External API calls |
+| **Excel Parsing** | PhpSpreadsheet | Import .xlsx/.csv files |
+| **Session Management** | Native PHP Sessions | Authentication state |
+| **Hosting** | Shared Hosting (cPanel) | Deployment target |
+| **WhatsApp API** | tools.onhandi.com | Message sending |
+
+---
 
 ## ✅ Phase 1: Foundation (Completed)
 
