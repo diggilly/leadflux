@@ -298,6 +298,108 @@ app.onhandi.com/
 
 ---
 
+
+
+##  🎯 Core Features (User-Facing)
+1. 📝 Campaign Creation Wizard
+Step-by-step flow:
+
+
+```
+
+[Step 1: Basics]
+├─ Campaign Name (required)
+├─ Description (optional)
+├─ Campaign Type:
+│  ├─ One-time broadcast
+│  ├─ Scheduled campaign
+│  └─ Recurring (daily/weekly)
+└─ Tags/Labels for organization
+
+[Step 2: Recipients]
+├─ Select Source:
+│  ├─ All contacts
+│  ├─ Specific groups
+│  ├─ Custom filters (qualifier, website status, tags)
+│  ├─ Upload CSV list
+│  └─ API-provided lead IDs
+├─ Preview recipient count
+├─ Exclude duplicates/already-messaged
+└─ Test send to 1-5 numbers first
+
+[Step 3: Message Content]
+├─ Message Type Selector:
+│  ├─ 📝 Text (with emoji support)
+│  ├─ 🖼️ Image + caption
+│  ├─ 🎬 Video + caption
+│  ├─ 📄 Document (PDF, DOC, etc.)
+│  ├─ 🎵 Audio message
+│  ├─ 📍 Location share
+│  ├─ 👤 Contact card (vCard)
+│  ├─ 🗳️ Interactive poll
+│  └─ 👁️ View-once media
+├─ Rich Text Editor:
+│  ├─ Variables: {name}, {phone}, {custom_field}
+│  ├─ Emoji picker
+│  ├─ Character counter (WhatsApp limits)
+│  └─ Preview on phone mockup
+├─ Media Upload:
+│  ├─ Drag & drop
+│  ├─ URL import
+│  ├─ Library of previously uploaded media
+│  └─ Auto-compress for WhatsApp limits
+└─ Fallback message (if media fails)
+
+[Step 4: Sending Strategy]
+├─ Delivery Mode:
+│  ├─ 🐌 Sequential (one-by-one, slow)
+│  ├─ 🎲 Random order (avoid patterns)
+│  ├─ 🔄 Round-robin (across sessions)
+│  ├─ ⚖️ Balanced (by gateway health)
+│  └─ 💥 Burst (fast, for small lists)
+├─ Rate Limiting:
+│  ├─ Messages per minute (10-100)
+│  ├─ Daily cap per session
+│  ├─ Pause between batches
+│  └─ Business hours only toggle
+├─ Anti-Ban Protections:
+│  ├─ Random delay (500ms-3000ms)
+│  ├─ Simulate typing indicator
+│  ├─ Rotate WhatsApp sessions
+│  ├─ Auto-pause on high error rate
+│  └─ Human-like sending patterns
+└─ Retry Logic:
+   ├─ Max retries per message (0-3)
+   ├─ Exponential backoff
+   └─ Skip after N failures
+
+[Step 5: Schedule & Launch]
+├─ Send Options:
+│  ├─ 🚀 Send now
+│  ├─ 📅 Schedule for later (date/time picker)
+│  └─ ⏰ Recurring schedule (cron-like)
+├─ Notifications:
+│  ├─ Email on completion
+│  ├─ Webhook on status change
+│  └─ In-app alerts for failures
+├─ Review Summary:
+│  ├─ Recipient count
+│  ├─ Estimated duration
+│  ├─ Cost estimate (if applicable)
+│  └─ Compliance checklist
+└─ [Launch Campaign] button
+
+
+
+
+```
+
+
+
+
+
+
+
 ## 💻 Technology Stack
 
 | Layer | Technology | Purpose |
