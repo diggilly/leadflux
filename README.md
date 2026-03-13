@@ -34,6 +34,7 @@ Built for marketing agencies, sales teams, and entrepreneurs who need to:
 - ✅ Maintain data isolation between clients/teams
 - ✅ Scale messaging while avoiding WhatsApp bans
 
+
 ---
 
 ## ✨ Core Features
