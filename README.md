@@ -1,737 +1,442 @@
-# 🚀 LeadFlux - Multi-Tenant SaaS Lead Recovery Platform
+Now I have the FULL picture. Let me write the complete README then we build:
 
-> **Automate lead qualification, website verification, and WhatsApp outreach at scale**
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Core Features](#-core-features)
-- [Architecture](#-architecture)
-- [Technology Stack](#-technology-stack)
-- [Phase 1: Foundation ✅](#-phase-1-foundation-)
-- [Phase 2: Multi-Tenant SaaS ✅](#-phase-2-multi-tenant-saas-)
-- [Phase 3: WhatsApp Integration 🔄](#-phase-3-whatsapp-integration-)
-- [Getting Started](#-getting-started)
-- [Security & Compliance](#-security--compliance)
-- [Roadmap](#-roadmap)
+```markdown
+# KinfluxAPI - WhatsApp API Platform
+> Built on custom PHP MVC Framework + Node.js Baileys
 
 ---
 
-## 🎯 Overview
+## 🌐 Infrastructure
 
-**LeadFlux** is a production-ready, multi-tenant SaaS platform designed to help businesses:
-
-1. **Import leads** from Excel/CSV files with intelligent column mapping
-2. **Verify websites** automatically to qualify leads based on online presence
-3. **Send targeted WhatsApp messages** via the onhandi.com gateway
-4. **Track campaigns** with real-time analytics and isolated user workspaces
-
-Built for marketing agencies, sales teams, and entrepreneurs who need to:
-- ✅ Qualify leads at scale without manual research
-- ✅ Personalize outreach based on website status
-- ✅ Maintain data isolation between clients/teams
-- ✅ Scale messaging while avoiding WhatsApp bans
-
-
----
-
-## ✨ Core Features
-
-### 🔍 Lead Import & Verification
-- **Smart Excel/CSV Import**: Auto-detect columns (Name, Phone, Website)
-- **Website Verification Engine**: 
-  - Tests HTTP/HTTPS endpoints
-  - Handles Facebook URLs, redirects, and edge cases
-  - Returns detailed status: `WORKING`, `NOT_WORKING`, `NO_WEBSITE`, `ERROR`
-- **Live Progress Tracking**: Modal with progress bar during bulk verification
-- **Verification Results Dashboard**: Filterable table with targeting recommendations
-
-### 🏢 Multi-Tenant SaaS Architecture
-- **Complete Data Isolation**: Every query scoped to `user_id`
-- **Per-User Workspaces**: Custom names, slugs, timezones, branding
-- **Subscription System**: Free/Starter/Pro/Enterprise plans with feature limits
-- **Tenant Settings**: Per-user WhatsApp credentials, daily limits, working hours
-- **Admin Tools**: Database management, migration runner, SQL executor (with safety confirmations)
-
-### 👤 User Experience
-- **Modern Responsive UI**: Bootstrap 5, custom CSS, mobile-optimized
-- **Real-Time Notifications**: Toast system for actions, alerts, and system updates
-- **Profile Management**: Update info, change password, manage preferences
-- **Onboarding Flow**: 3-step workspace setup with timezone and use-case selection
-
-### 🔐 Security & Reliability
-- **Authentication**: Email/password login with OTP phone verification
-- **CSRF Protection**: Token validation on all state-changing requests
-- **Role-Based Access**: Admin vs. regular user permissions
-- **Error Handling**: Graceful failures with user-friendly messages
-- **Logging**: Comprehensive activity logs for audit trails
+| Service | URL | Tech |
+|---------|-----|------|
+| WhatsApp Node Server | https://verify.onhandi.com | Node.js + Baileys |
+| KinfluxAPI Dashboard | https://app.onhandi.com | Custom PHP MVC |
+| Database | localhost:3306 | MySQL |
 
 ---
 
 ## 🏗️ Architecture
 
 ```
+┌─────────────────────────────────────────────────────────┐
+│                    KinfluxAPI Platform                   │
+│                                                         │
+│  ┌──────────────────────┐   ┌────────────────────────┐  │
+│  │  PHP MVC App          │   │  Node.js Server         │  │
+│  │  app.onhandi.com      │◄──►  verify.onhandi.com    │  │
+│  │                       │   │  :3100                  │  │
+│  │  • Landing Page       │   │                         │  │
+│  │  • Auth + OTP         │   │  • WhatsApp Connections │  │
+│  │  • Dashboard UI       │   │  • QR Generation        │  │
+│  │  • Instances/QR       │   │  • Send/Receive msgs    │  │
+│  │  • API Key Mgmt       │   │  • Socket.IO Realtime   │  │
+│  │  • Webhook Config     │   │  • Baileys Library      │  │
+│  │  • Message Logs       │   │  • Plugin System        │  │
+│  │  • Contacts           │   │                         │  │
+│  │  • Analytics          │   │                         │  │
+│  │  • SMS Gateway(soon)  │   │                         │  │
+│  └──────────┬────────────┘   └─────────────────────────┘  │
+│             │                           │                  │
+│             └───────────┬───────────────┘                  │
+│                         ▼                                  │
+│               ┌──────────────────┐                        │
+│               │  MySQL Database   │                        │
+│               │  nyumban9_mpwa1   │                        │
+│               │                   │                        │
+│               │  • users          │                        │
+│               │  • devices        │                        │
+│               │  • api_keys       │                        │
+│               │  • api_usage_logs │                        │
+│               │  • api_rate_limits│                        │
+│               │  • webhooks       │                        │
+│               │  • message_logs   │                        │
+│               │  • contacts       │                        │
+│               │  • contact_groups │                        │
+│               │  • plans          │                        │
+│               │  • orders         │                        │
+│               │  • plugins        │                        │
+│               └──────────────────┘                        │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Complete File Structure
+
+### Node.js Server (verify.onhandi.com) ✅ DONE
+```
+/home3/nyumban9/verify.onhandi.com/
+│
+├── server.js                         # Entry point
+├── package.json                      # Dependencies
+├── .env                              # Environment config
+├── migrate.php                       # DB migration runner
+│
+├── server/
+│   ├── whatsapp.js                   # Core WA logic (Baileys)
+│   ├── pluginLoader.js               # Plugin system
+│   ├── controllers/
+│   │   ├── index.js                  # All exports
+│   │   ├── blast.js                  # Bulk messaging
+│   │   ├── incomingMessage.js        # Incoming handler
+│   │   ├── store.js                  # Chat store
+│   │   └── conversations/            # AI conversations
+│   ├── database/
+│   │   ├── index.js                  # MySQL pool
+│   │   └── model.js                  # DB models
+│   ├── lib/
+│   │   ├── index.js                  # Logger export
+│   │   ├── cache.js                  # NodeCache
+│   │   ├── helper.js                 # Helpers
+│   │   ├── middleware.js             # Auth + checks
+│   │   ├── pino.js                   # Logger
+│   │   ├── specs.js                  # CPU/RAM stats
+│   │   └── controllers/
+│   │       └── incomingMessage.js
+│   └── router/
+│       └── index.js                  # Express routes
+│
+├── credentials/                      # WA session files
+│   └── {phone_number}/               # Per device
+├── plugins/                          # Plugin modules
+├── public/
+│   ├── index.html                    # Test panel
+│   └── images/
+│       └── video-cover.png
+└── database/
+    ├── migrations/
+    └── seeders/
+```
+
+### PHP MVC App (app.onhandi.com) 🔲 BUILDING NOW
+```
 /home3/nyumban9/app.onhandi.com/
 │
+├── public/
+│   ├── index.php                     # Entry point
+│   ├── .htaccess                     # URL rewriting
+│   └── assets/
+│       ├── css/
+│       │   ├── app.css               # Main styles
+│       │   ├── auth.css              # Auth pages
+│       │   └── dashboard.css         # Dashboard
+│       ├── js/
+│       │   ├── app.js                # Main JS
+│       │   ├── socket.io.min.js      # Socket.IO client
+│       │   ├── instances.js          # QR connect logic
+│       │   ├── api-keys.js           # API key mgmt
+│       │   └── webhooks.js           # Webhook config
+│       └── img/
+│           ├── logo.svg              # KinfluxAPI logo
+│           └── favicon.ico
+│
 ├── app/
-│   ├── Controllers/
-│   │   ├── AuthController.php (handles login, register, OTP via middleware)
-│   │   ├── DashboardController.php
-│   │   ├── WhatsAppController.php
-│   │   ├── LeadController.php
-│   │   ├── CampaignController.php
-│   │   ├── ContactController.php
-│   │   ├── HistoryController.php
-│   │   ├── SettingsController.php
-│   │   ├── ProfileController.php
-│   │   ├── DatabaseController.php
-│   │   ├── CronController.php
-│   │   ├── NotificationController.php
-│   │   ├── DatabaseToolsController.php
-│   │   ├── OnboardingController.php
-│   │   ├── PromoteController.php
-│   │   └── TroubleshootController.php
+│   │
+│   ├── Core/
+│   │   ├── Controller.php            # Base controller ✅
+│   │   ├── Router.php                # Router ✅
+│   │   ├── Database.php              # PDO manager ✅
+│   │   ├── Logger.php                # Logger ✅
+│   │   ├── CSRF.php                  # CSRF protection ✅
+│   │   ├── Env.php                   # Env helper ✅
+│   │   ├── Notification.php          # Flash notifications ✅
+│   │   └── PluginLoader.php          # Plugin system ✅
 │   │
 │   ├── Middleware/
-│   │   ├── Auth.php (authentication middleware)
-│   │   └── Tenant.php (multi-tenant middleware)
+│   │   ├── Auth.php                  # Session auth ✅
+│   │   ├── ApiAuth.php               # API key auth ✅
+│   │   ├── ApiMiddleware.php         # API middleware ✅
+│   │   └── Tenant.php                # Multi-tenant ✅
 │   │
 │   ├── Models/
-│   │   ├── Lead.php
-│   │   ├── Campaign.php
-│   │   ├── Contact.php
-│   │   └── Log.php
+│   │   ├── User.php                  # Users model
+│   │   ├── Device.php                # WA instances model
+│   │   ├── ApiKey.php                # API keys model
+│   │   ├── Webhook.php               # Webhooks model
+│   │   ├── MessageLog.php            # Message history
+│   │   ├── Contact.php               # Contacts model
+│   │   └── ContactGroup.php          # Contact groups
+│   │
+│   ├── Controllers/
+│   │   ├── AuthController.php        # Login/Register/OTP
+│   │   ├── DashboardController.php   # Main dashboard
+│   │   ├── InstanceController.php    # WA instances + QR
+│   │   ├── ApiKeyController.php      # API key management
+│   │   ├── WebhookController.php     # Webhook config
+│   │   ├── MessageController.php     # Send + history
+│   │   ├── ContactController.php     # Contacts
+│   │   ├── SettingsController.php    # User settings
+│   │   ├── ProfileController.php     # Profile
+│   │   └── Api/
+│   │       └── V1/
+│   │           ├── SendController.php      # Send messages
+│   │           ├── InstanceController.php  # Instance API
+│   │           └── WebhookController.php   # Webhook API
 │   │
 │   ├── Services/
-│   │   ├── WhatsAppGateway.php
-│   │   ├── LeadProcessor.php
-│   │   ├── MessageTemplates.php
-│   │   ├── Campaign.php
-│   │   ├── ExportService.php
-│   │   └── WebsiteVerifier.php
+│   │   ├── NodeService.php           # Talks to Node.js
+│   │   ├── WhatsappService.php       # WA operations
+│   │   └── CreditService.php         # Credits system
 │   │
-│   ├── Views/
-│   │   ├── layouts/
-│   │   │   ├── main.php (main dashboard layout)
-│   │   │   └── auth.php (login/register/OTP layout)
-│   │   │
-│   │   ├── dashboard/
-│   │   │   └── content.php (main dashboard content with WhatsApp)
-│   │   │
-│   │   ├── auth/
-│   │   │   ├── login.php
-│   │   │   ├── register.php (if exists, or handled by middleware)
-│   │   │   └── verify-otp.php
-│   │   │
-│   │   ├── onboarding/
-│   │   │   └── index.php
-│   │   │
-│   │   ├── marketing/
-│   │   │   ├── verify.php (import & verify leads)
-│   │   │   ├── campaigns.php
-│   │   │   └── contacts.php
-│   │   │
-│   │   ├── settings/
-│   │   │   └── index.php
-│   │   │
-│   │   ├── profile/
-│   │   │   └── index.php
-│   │   │
-│   │   ├── history/
-│   │   │   └── index.php
-│   │   │
-│   │   ├── admin/
-│   │   │   └── database-tools.php
-│   │   │
-│   │   └── whatsapp/
-│   │       └── sessions.php (if separate page exists)
-│   │
-│   └── Core/
-│       ├── Controller.php (base controller with tenant methods)
-│       ├── Router.php
-│       ├── Database.php
-│       └── Logger.php
-│
-├── public/
-│   ├── index.php (main entry point with .env loader)
-│   ├── .htaccess
-│   └── assets/ (CSS, JS, images)
+│   └── Views/
+│       ├── layouts/
+│       │   ├── main.php              # Dashboard layout
+│       │   └── auth.php              # Auth layout
+│       │
+│       ├── landing/
+│       │   └── index.php             # Public landing page
+│       │
+│       ├── auth/
+│       │   ├── login.php             # Login page
+│       │   ├── register.php          # Register page
+│       │   └── verify-otp.php        # OTP verification
+│       │
+│       ├── dashboard/
+│       │   └── index.php             # Main dashboard
+│       │
+│       ├── instances/
+│       │   └── index.php             # WA instances + QR
+│       │
+│       ├── messages/
+│       │   └── index.php             # Message logs + send
+│       │
+│       ├── api-keys/
+│       │   └── index.php             # API key management
+│       │
+│       ├── webhooks/
+│       │   └── index.php             # Webhook config
+│       │
+│       ├── contacts/
+│       │   └── index.php             # Contacts
+│       │
+│       └── settings/
+│           └── index.php             # Settings
 │
 ├── storage/
 │   ├── logs/
-│   │   └── app.log
+│   │   ├── app.log
+│   │   └── php_errors.log
 │   ├── cache/
+│   │   ├── rate_limit/
 │   │   └── whatsapp/
 │   └── exports/
 │
-├── .env (environment variables)
-├── vendor/
-└── composer.json
-```
-
-### Data Flow
-```
-User Uploads Excel
-        ↓
-LeadController::processMapped()
-        ↓
-WebsiteVerifier::checkDetailed() → HTTP/HTTPS requests
-        ↓
-Results saved to `leads` table (scoped to user_id)
-        ↓
-Dashboard displays user's isolated data
-        ↓
-[Phase 3] WhatsAppGateway sends messages via onhandi.com API
-```
-### qualified leads
-```
-📥 Qualified Leads (88 imported)
-│
-├─📱 STEP 1: WhatsApp Number Verification
-│  ├─ POST to https://tools.onhandi.com/api/number-checker/check
-│  ├─ Batch up to 100 numbers per API call
-│  ├─ Cache results for 24h to avoid redundant checks
-│  └─ ONLY proceed if response: {"isValid": true}
-│
-├─📨 STEP 2: Send Personalized Messages (Anti-Ban Protected)
-│  ├─ IF website WORKING → 
-│  │   "Hi {name}, noticed your site is live! We offer maintenance, SEO, social media management. Interested?"
-│  ├─ IF website MISSING/NOT_WORKING → 
-│  │   "Hi {name}, saw your business could use a professional website. We design affordable, mobile-friendly sites. Free consultation?"
-│  ├─ Anti-ban logic:
-│  │  • Random delay: sleep(rand(5,15)) between each message
-│  │  • Batch cooldown: sleep(rand(120,300)) after every 15 messages
-│  │  • Daily limits: 30/day (new number) / 70/day (warmed) tracked in DB
-│  │  • Working hours: Only send 09:00-18:00 Africa/Nairobi
-│  │  • Message rotation: Cycle 3-5 templates randomly
-│  └─ POST to https://tools.onhandi.com/api/sessions/{sessionId}/send
-│
-├─📊 STEP 3: Log & Track
-│  ├─ Log every action: WHATSAPP_CHECKED → MESSAGE_SENT/FAILED
-│  ├─ Store messageId for delivery tracking
-│  └─ Dashboard shows real-time progress via AJAX
-│
-└─🎛️ STEP 4: Dashboard Controls
-   ├─ WhatsApp session status indicator (🟢 Connected / 🔴 Disconnected)
-   ├─ "Send Test Message" button for manual triggers
-   ├─ Live send progress with success/fail counters
-   └─ Anti-ban status panel: "Today: X/30 sent • Next allowed: HH:MM"
-```
-
-### whatsapp integration 
-```
-✅ app/Messaging/WhatsAppGateway.php
-   - Full onhandi.com API client (number checker + message sender)
-   - Batch processing (100 numbers max per call)
-   - 24h result caching to avoid redundant API calls
-   - Error handling with retries
-
-✅ app/Services/LeadProcessor.php  
-   - Complete workflow: Verify → Qualify → Check WhatsApp → Send
-   - Anti-ban logic: 
-     • Random delay: sleep(rand(5,15)) between messages
-     • Batch cooldown: sleep(rand(120,300)) every 15 messages
-     • Daily limits: 30/day (new) / 70/day (warmed) tracked in DB
-     • Working hours: Only send 09:00-18:00 Africa/Nairobi
-   - Message rotation: Cycle 3-5 templates randomly via MessageRotator
-
-✅ app/Controllers/WhatsAppController.php
-   - AJAX endpoints: /api/whatsapp/status, /api/whatsapp/send-test
-   - Real-time progress updates for dashboard
-   - Session management for onhandi.com gateway
-
-✅ Updated Dashboard UI
-   - WhatsApp session status indicator (🟢 Connected / 🔴 Disconnected)
-   - "Send Test Message" button for qualified leads
-   - Live send progress with success/fail counters
-   - Anti-ban status panel (today's count, next allowed send time)
-
-✅ Message Templates (Your Business Logic)
-   • IF website WORKING → 
-     "Hi {name}, noticed your site is live! We offer maintenance, SEO, social media management. Interested?"
-   • IF website MISSING/NOT_WORKING → 
-     "Hi {name}, saw your business could use a professional website. We design affordable, mobile-friendly sites. Free consultation?"
-```
-
-
-
-
-### 🚀 LeadFlux Public API - Complete File Structure & Code
-Great!  the exact file structure and complete code for your Lead flux API system.
-📁 Complete File Structure
-```
-app.onhandi.com/
-├── app/
-│   ├── Controllers/
-│   │   ├── Api/
-│   │   │   ├── ApiController.php          ← Base API controller
-│   │   │   ├── LeadsController.php        ← Leads endpoints
-│   │   │   ├── NumbersController.php      ← Number verification
-│   │   │   ├── CampaignsController.php    ← Campaign management
-│   │   │   ├── WhatsAppController.php     ← WhatsApp messaging
-│   │   │   └── ApiKeysController.php      ← API key management
-│   │   └── ... (existing controllers)
-│   │
-│   ├── Middleware/
-│   │   ├── ApiAuth.php                    ← API authentication
-│   │   └── ... (existing middleware)
-│   │
-│   ├── Services/
-│   │   ├── ApiRateLimiter.php             ← Rate limiting service
-│   │   └── ... (existing services)
-│   │
-│   └── Views/
-│       └── api/
-│           ├── documentation.php          ← API docs page
-│           └── keys.php                   ← API key management UI
-│
-├── public/
-│   └── api/
-│       └── docs.php                       ← Public API documentation
-│
-└── storage/
-    └── logs/
-        └── api.log                        ← API usage logs
+├── .env                              # Environment variables
+├── composer.json                     # PHP dependencies
+└── vendor/                           # Composer packages
 ```
 
 ---
 
+## 🗺️ Routes Map
 
+### Web Routes (Dashboard)
+```
+GET  /                    → Landing page
+GET  /login               → Login page
+POST /auth/authenticate   → Process login
+GET  /register            → Register page
+POST /auth/create-account → Process register
+GET  /verify-otp          → OTP page
+POST /auth/verify-otp     → Process OTP
+GET  /auth/logout         → Logout
 
-##  🎯 Core Features (User-Facing)
-1. 📝 Campaign Creation Wizard
-Step-by-step flow:
-
-
+GET  /dashboard           → Main dashboard
+GET  /instances           → WA instances + QR
+GET  /api-keys            → API key management
+GET  /webhooks            → Webhook config
+GET  /messages            → Message logs
+GET  /contacts            → Contacts
+GET  /settings            → Settings
+GET  /profile             → Profile
 ```
 
-[Step 1: Basics]
-├─ Campaign Name (required)
-├─ Description (optional)
-├─ Campaign Type:
-│  ├─ One-time broadcast
-│  ├─ Scheduled campaign
-│  └─ Recurring (daily/weekly)
-└─ Tags/Labels for organization
-
-[Step 2: Recipients]
-├─ Select Source:
-│  ├─ All contacts
-│  ├─ Specific groups
-│  ├─ Custom filters (qualifier, website status, tags)
-│  ├─ Upload CSV list
-│  └─ API-provided lead IDs
-├─ Preview recipient count
-├─ Exclude duplicates/already-messaged
-└─ Test send to 1-5 numbers first
-
-[Step 3: Message Content]
-├─ Message Type Selector:
-│  ├─ 📝 Text (with emoji support)
-│  ├─ 🖼️ Image + caption
-│  ├─ 🎬 Video + caption
-│  ├─ 📄 Document (PDF, DOC, etc.)
-│  ├─ 🎵 Audio message
-│  ├─ 📍 Location share
-│  ├─ 👤 Contact card (vCard)
-│  ├─ 🗳️ Interactive poll
-│  └─ 👁️ View-once media
-├─ Rich Text Editor:
-│  ├─ Variables: {name}, {phone}, {custom_field}
-│  ├─ Emoji picker
-│  ├─ Character counter (WhatsApp limits)
-│  └─ Preview on phone mockup
-├─ Media Upload:
-│  ├─ Drag & drop
-│  ├─ URL import
-│  ├─ Library of previously uploaded media
-│  └─ Auto-compress for WhatsApp limits
-└─ Fallback message (if media fails)
-
-[Step 4: Sending Strategy]
-├─ Delivery Mode:
-│  ├─ 🐌 Sequential (one-by-one, slow)
-│  ├─ 🎲 Random order (avoid patterns)
-│  ├─ 🔄 Round-robin (across sessions)
-│  ├─ ⚖️ Balanced (by gateway health)
-│  └─ 💥 Burst (fast, for small lists)
-├─ Rate Limiting:
-│  ├─ Messages per minute (10-100)
-│  ├─ Daily cap per session
-│  ├─ Pause between batches
-│  └─ Business hours only toggle
-├─ Anti-Ban Protections:
-│  ├─ Random delay (500ms-3000ms)
-│  ├─ Simulate typing indicator
-│  ├─ Rotate WhatsApp sessions
-│  ├─ Auto-pause on high error rate
-│  └─ Human-like sending patterns
-└─ Retry Logic:
-   ├─ Max retries per message (0-3)
-   ├─ Exponential backoff
-   └─ Skip after N failures
-
-[Step 5: Schedule & Launch]
-├─ Send Options:
-│  ├─ 🚀 Send now
-│  ├─ 📅 Schedule for later (date/time picker)
-│  └─ ⏰ Recurring schedule (cron-like)
-├─ Notifications:
-│  ├─ Email on completion
-│  ├─ Webhook on status change
-│  └─ In-app alerts for failures
-├─ Review Summary:
-│  ├─ Recipient count
-│  ├─ Estimated duration
-│  ├─ Cost estimate (if applicable)
-│  └─ Compliance checklist
-└─ [Launch Campaign] button
-
-
-
-
+### REST API Routes (v1)
 ```
+# Instances
+GET    /api/v1/instances              # List instances
+POST   /api/v1/instances              # Create instance
+DELETE /api/v1/instances/{token}      # Delete instance
+GET    /api/v1/instances/{token}      # Get instance info
 
+# Messaging
+POST   /api/v1/send/text              # Send text
+POST   /api/v1/send/media             # Send media
+POST   /api/v1/send/location          # Send location
+POST   /api/v1/send/vcard             # Send vcard
+POST   /api/v1/send/button            # Send button
+POST   /api/v1/send/list              # Send list
+POST   /api/v1/send/poll              # Send poll
+POST   /api/v1/send/product           # Send product
+POST   /api/v1/send/sticker           # Send sticker
 
+# Utilities
+POST   /api/v1/check-number           # Check WA number
+POST   /api/v1/fetch-groups           # Get groups
 
+# Webhooks
+GET    /api/v1/webhooks               # List webhooks
+POST   /api/v1/webhooks               # Create webhook
+POST   /api/v1/webhooks/{id}          # Update webhook
+DELETE /api/v1/webhooks/{id}          # Delete webhook
 
-
-
-
-## 💻 Technology Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Backend** | PHP 8.3+ | Server-side logic |
-| **Framework** | Custom MVC | Lightweight, no bloat |
-| **Database** | MySQL 8+/MariaDB | Data persistence |
-| **Frontend** | Bootstrap 5 + Vanilla JS | Responsive UI |
-| **HTTP Client** | cURL | External API calls |
-| **Excel Parsing** | PhpSpreadsheet | Import .xlsx/.csv files |
-| **Session Management** | Native PHP Sessions | Authentication state |
-| **Hosting** | Shared Hosting (cPanel) | Deployment target |
-| **WhatsApp API** | tools.onhandi.com | Message sending |
-
----
-
-## ✅ Phase 1: Foundation (Completed)
-
-### Delivered Features
-- ✅ **Core MVC Framework**: Router, Controller, Database, Logger
-- ✅ **Authentication System**: Login, registration, CSRF protection
-- ✅ **Lead Import Pipeline**: Excel upload → column mapping → database insert
-- ✅ **Website Verification Service**: 
-  - Robust URL parsing with `parse_url()`
-  - HTTP/HTTPS fallback testing
-  - Detailed result objects (status, HTTP code, response time)
-- ✅ **Dashboard UI**: Stats cards, verification results table, live logs
-- ✅ **Progress Modal**: Real-time feedback during bulk operations
-- ✅ **Error Handling**: User-friendly messages, logging, graceful failures
-
-### Key Files Created
-```
-app/Core/Controller.php
-app/Core/Router.php
-app/Controllers/LeadController.php
-app/Services/WebsiteVerifier.php
-app/Views/dashboard.php
+# API Keys
+GET    /api/v1/api-keys               # List keys
+POST   /api/v1/api-keys               # Create key
+DELETE /api/v1/api-keys/{id}          # Delete key
 ```
 
 ---
 
-## ✅ Phase 2: Multi-Tenant SaaS (Completed)
+## ⚙️ Environment Variables
 
-### Delivered Features
-- ✅ **Tenant Isolation Middleware**: `Tenant::requireTenant()` enforces data scoping
-- ✅ **Database Schema Updates**: 
-  - `user_id` columns on all data tables (`leads`, `campaigns`, `contacts`, etc.)
-  - `tenant_settings` table for per-user config
-  - `subscriptions` table for plan management
-- ✅ **Workspace Onboarding**: 3-step setup flow with slug generation
-- ✅ **Per-User Settings**: WhatsApp credentials, timezone, daily limits, working hours
-- ✅ **Admin Database Tools**: 
-  - Migration runner with one-click execution
-  - Safe SQL executor with dangerous operation warnings
-  - Real query results display (SELECT, DESCRIBE, SHOW)
-- ✅ **Notification System**: Toast alerts for all user actions
-- ✅ **Responsive Header**: Workspace selector, user menu, notification badge
-- ✅ **Profile Management**: Update info, change password, view stats
-
-### Key Files Created
-```
-app/Middleware/Tenant.php
-app/Controllers/OnboardingController.php
-app/Controllers/DatabaseToolsController.php
-app/Services/NotificationService.php
-app/Views/onboarding/index.php
-app/Views/admin/database-tools.php
-database/migrations.sql (tenant isolation)
+### Node.js (verify.onhandi.com/.env)
+```env
+PORT_NODE=3100
+APP_URL=https://verify.onhandi.com
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=nyumban9_mpwa1
+DB_USERNAME=nyumban9_mpwa1
+DB_PASSWORD=nyumban9_mpwa1
+AUTH=mpedia-server-uUdkfgli783pkfnlaskogoighr
+ORIGIN=https://verify.onhandi.com
+BEXA_URL=https://bexa.onexgen.com:8443/mpwa/completions
+CHATGPT_URL=https://api.openai.com/v1/chat/completions
+CHATGPT_MODEL=gpt-3.5-turbo
+GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
-### Security Enhancements
-- 🔐 **Query Scoping**: All data queries include `WHERE user_id = :user_id`
-- 🔐 **Session Validation**: `$_SESSION['user_id']` cast to int to prevent injection
-- 🔐 **Admin-Only Routes**: Database tools protected by `Auth::requireAdmin()`
-- 🔐 **SQL Safety**: Dangerous operations require explicit confirmation modal
+### PHP App (app.onhandi.com/.env)
+```env
+APP_NAME=KinfluxAPI
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://app.onhandi.com
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=nyumban9_mpwa1
+DB_USERNAME=nyumban9_mpwa1
+DB_PASSWORD=nyumban9_mpwa1
+
+NODE_SERVER_URL=https://verify.onhandi.com
+NODE_SERVER_PORT=3100
+NODE_AUTH=mpedia-server-uUdkfgli783pkfnlaskogoighr
+
+SESSION_LIFETIME=120
+CSRF_SECRET=your_csrf_secret_here
+LOG_LEVEL=error
+```
 
 ---
 
-## 🔄 Phase 3: WhatsApp Integration (Next)
+## 🗄️ Database Tables
 
-### 🎯 Objective
-Enable automated, compliant WhatsApp messaging to qualified leads using the **onhandi.com API**, with anti-ban protections and per-user configuration.
-
-### 📦 Components to Implement
-
-#### 1. `app/Messaging/WhatsAppGateway.php`
-```php
-class WhatsAppGateway
-{
-    // API Client for tools.onhandi.com
-    - checkNumber(string $phone): array    // Verify WhatsApp availability
-    - sendMessage(string $phone, string $message, array $options): array  // Send message
-    - getDeliveryStatus(string $messageId): array  // Track delivery
-    
-    // Anti-Ban Logic
-    - applyRandomDelay(int $min, int $max): void  // Sleep between messages
-    - checkDailyLimit(int $userId): bool  // Enforce per-user limits
-    - isWithinWorkingHours(string $timezone): bool  // Respect business hours
-    
-    // Caching
-    - cacheNumberCheck(string $phone, array $result, int $ttl): void  // 24h cache
-    - getCachedResult(string $phone): ?array  // Avoid redundant API calls
-}
+### Existing (from Node.js migrations) ✅
+```sql
+users                 # Platform users
+devices               # WhatsApp instances
+autoreplies           # Auto-reply rules
+contacts              # Contacts
+tags                  # Contact tags
+campaigns             # Blast campaigns
+blasts                # Campaign messages
+message_histories     # Message logs
+chat_sessions         # AI chat sessions
+chat_messages         # AI messages
+plans                 # Subscription plans
+orders                # Orders
+plugins               # Plugin registry
+password_resets       # Password resets
 ```
 
-#### 2. `app/Services/LeadProcessor.php`
-```php
-class LeadProcessor
-{
-    // Complete workflow
-    public function processQualifiedLeads(int $userId, int $batchSize = 10): array
-    {
-        // 1. Fetch qualified leads (scoped to user)
-        // 2. Check WhatsApp availability via gateway
-        // 3. Apply anti-ban logic (delays, limits, hours)
-        // 4. Send personalized message based on website status:
-        //    - WORKING → "SEO/Maintenance" offer
-        //    - NOT_WORKING/NO_WEBSITE → "Web Design" offer
-        // 5. Log results to activity_logs (user-scoped)
-        // 6. Update lead status (SENT/FAILED)
-    }
-}
+### New (KinfluxAPI specific) 🔲
+```sql
+api_keys              # API keys per user
+api_usage_logs        # API call logs
+api_rate_limits       # Rate limiting
+webhooks              # Webhook configs
+webhook_logs          # Webhook delivery logs
+contact_groups        # Contact grouping
 ```
-
-#### 3. `app/Controllers/WhatsAppController.php`
-```php
-class WhatsAppController extends Controller
-{
-    // AJAX endpoints for dashboard
-    public function getStatus(): void      // Check gateway connection
-    public function sendTest(): void       // Send test message to phone
-    public function startCampaign(): void  // Begin bulk send with progress
-    public function getProgress(): void    // Poll for real-time updates
-}
-```
-
-#### 4. Updated Dashboard UI
-- 🟢 **Connection Status Indicator**: WhatsApp gateway status (Connected/Disconnected)
-- 📤 **Send Test Message**: Input phone + send hardcoded "LeadFlux is up and running"
-- 📊 **Live Send Progress**: Progress bar + success/fail counters during campaigns
-- ⚙️ **Anti-Ban Panel**: "Today: X/30 sent • Next: HH:MM" with limit controls
-- 📋 **Message Templates**: Rotate 3-5 templates randomly to avoid spam detection
-
-#### 5. Business Logic Implementation
-```php
-// Message selection based on website verification
-if ($lead['website_status'] === 'WORKING') {
-    $message = "Hi {name}, noticed your site is live! 🎉 We offer maintenance, SEO, and social media management. Interested in a free audit?";
-} elseif (in_array($lead['website_status'], ['NOT_WORKING', 'NO_WEBSITE', 'ERROR'])) {
-    $message = "Hi {name}, saw your business could use a professional website. 🚀 We design affordable, mobile-friendly sites. Free consultation?";
-}
-```
-
-#### 6. Export Functionality
-- 📥 `with_website.csv`: Leads with working websites (SEO/maintenance offers)
-- 📥 `without_website.csv`: Leads without/broken websites (web design offers)
-- 📊 `campaign_report.csv`: Send results with timestamps and status codes
-
-### 🔐 Anti-Ban Protection Strategy
-| Technique | Implementation | Purpose |
-|-----------|---------------|---------|
-| **Random Delays** | `sleep(rand(5, 15))` between messages | Mimic human behavior |
-| **Batch Cooldowns** | `sleep(rand(120, 300))` after 15 messages | Avoid rate limiting |
-| **Daily Limits** | Track sends in DB; enforce per-plan limits | Prevent account flags |
-| **Working Hours** | Only send 09:00-18:00 Africa/Nairobi (configurable) | Respect recipient time |
-| **Message Rotation** | Cycle 3-5 templates randomly | Avoid spam pattern detection |
-| **Number Validation** | Pre-check via Number Checker API | Avoid sending to invalid numbers |
-
-### 📊 Dashboard Enhancements
-```
-┌─────────────────────────────────────────┐
-│ 🟢 WhatsApp: Connected  •  Today: 12/30 │
-├─────────────────────────────────────────┤
-│ [Send Test Message]  [Start Campaign]   │
-│                                         │
-│ Progress: [████████░░░░] 80%           │
-│ ✅ Sent: 24  ❌ Failed: 2  ⏳ Pending: 4 │
-│                                         │
-│ Next Send: 14:32 (in 8 min)            │
-│ Anti-Ban: Random delay • Batch cooldown│
-└─────────────────────────────────────────┘
-```
-
-### 🔗 API Integration Details
-**Endpoint**: `https://tools.onhandi.com/api/sessions/{sessionId}/send`  
-**Headers**: 
-```
-X-API-Key: {user_configured_key}
-Content-Type: application/json
-```
-**Request Body**:
-```json
-{
-  "to": "254712345678",
-  "message": "Your personalized message here",
-  "skipValidation": false
-}
-```
-
-**Response Handling**:
-- ✅ `200-299`: Message queued/sent → log as `SENT`
-- ❌ `401/403`: Auth error → alert user to check credentials
-- ❌ `404`: Invalid endpoint → alert user to check base URL
-- ❌ `429`: Rate limited → apply exponential backoff
-- ❌ Other: Log error, mark as `FAILED`, continue batch
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Build Order
 
-### Prerequisites
-- PHP 8.3+ with extensions: `curl`, `pdo_mysql`, `mbstring`, `zip`, `xml`
-- MySQL 8+ or MariaDB 10.5+
-- Composer for dependency management
-- cPanel or similar hosting with cron support
-
-### Installation
-```bash
-# 1. Clone repository
-git clone https://github.com/yourorg/leadflux.git
-cd leadflux
-
-# 2. Install dependencies
-composer install
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your database credentials and WhatsApp API details
-
-# 4. Run migrations
-php artisan migrate
-
-# 5. Set permissions
-chmod -R 755 storage bootstrap/cache
-
-# 6. Setup cron (for scheduled tasks)
-* * * * * /usr/local/bin/php /path/to/leadflux/artisan schedule:run >> /dev/null 2>&1
-
-# 7. Access application
-# Visit: https://yourdomain.com/public
+### Phase 1 - Core (NOW)
+```
+1. 🔲 New database tables (api_keys, webhooks etc)
+2. 🔲 .env setup
+3. 🔲 Landing page (KinfluxAPI brand)
+4. 🔲 Auth layout + Login + Register
+5. 🔲 Dashboard layout (sidebar + header)
+6. 🔲 Dashboard page (stats overview)
+7. 🔲 Instances page (QR connect via Node.js)
+8. 🔲 API Keys page
+9. 🔲 Webhooks page
+10. 🔲 REST API endpoints (v1)
 ```
 
-### First-Time Setup
-1. Register admin account (first user auto-promoted to admin)
-2. Complete workspace onboarding (name, slug, timezone)
-3. Configure WhatsApp credentials in Settings → WhatsApp Gateway
-4. Import leads via Marketing → Verify
-5. Start campaigns from Dashboard → WhatsApp Panel
+### Phase 2 - Features
+```
+11. 🔲 Message logs page
+12. 🔲 Contacts page
+13. 🔲 Send message from dashboard
+14. 🔲 Analytics
+15. 🔲 Settings page
+16. 🔲 Profile page
+```
+
+### Phase 3 - SaaS
+```
+17. 🔲 Credits system
+18. 🔲 Plans + Pricing
+19. 🔲 Billing (Stripe/PayPal)
+20. 🔲 Admin panel
+```
+
+### Phase 4 - Expand
+```
+21. 🔲 SMS Gateway
+22. 🔲 Bulk SMS
+23. 🔲 Email gateway
+```
 
 ---
 
-## 🔐 Security & Compliance
+## 🛠️ Tech Stack
 
-### Data Protection
-- 🔒 **Encryption**: Passwords hashed with `password_hash()` (bcrypt)
-- 🔒 **Input Sanitization**: All user inputs escaped with `htmlspecialchars()`
-- 🔒 **SQL Injection Prevention**: Prepared statements with bound parameters
-- 🔒 **XSS Protection**: Output encoding on all dynamic content
-
-### WhatsApp Compliance
-- ✅ **Opt-In Requirement**: Only message leads who provided phone numbers
-- ✅ **Unsubscribe Handling**: Include opt-out instructions in messages
-- ✅ **Rate Limiting**: Respect WhatsApp's messaging policies via anti-ban logic
-- ✅ **Data Retention**: Configurable log retention periods
-
-### Multi-Tenant Security
-- 🔐 **Query Scoping**: Middleware enforces `user_id` isolation on all data access
-- 🔐 **Session Validation**: User ID cast to int to prevent session fixation
-- 🔐 **Admin Separation**: Admin features protected by role checks
-- 🔐 **Audit Logging**: All sensitive actions logged with user context
+| Layer | Technology |
+|-------|-----------|
+| WhatsApp | Baileys v7 |
+| Realtime | Socket.IO v4 |
+| Node Backend | Express v5 |
+| PHP Framework | Custom MVC |
+| Database | MySQL 8 |
+| Auth | Sessions + JWT |
+| AI Bots | ChatGPT/Gemini/Claude/Groq |
 
 ---
 
-## 🗓️ Roadmap
+## 📞 Platform Info
 
-### Phase 3: WhatsApp Integration (Current)
-- [ ] WhatsAppGateway API client with error handling
-- [ ] LeadProcessor workflow with anti-ban logic
-- [ ] Real-time campaign progress dashboard
-- [ ] Message template rotation system
-- [ ] Export qualified leads by website status
-
-### Phase 4: Billing & Monetization
-- [ ] Stripe/PayPal integration for subscription payments
-- [ ] Usage-based billing (messages sent, leads imported)
-- [ ] Plan upgrade/downgrade flow
-- [ ] Invoice generation and payment history
-
-### Phase 5: Advanced Analytics
-- [ ] Campaign performance dashboards
-- [ ] Lead conversion tracking
-- [ ] A/B testing for message templates
-- [ ] Exportable reports (PDF/CSV)
-
-### Phase 6: Team Collaboration
-- [ ] Multi-user workspaces with roles (Admin, Member, Viewer)
-- [ ] Shared lead pools and assignment
-- [ ] Team activity feeds and notifications
-- [ ] Audit trails for compliance
+- **Brand:** KinfluxAPI
+- **Node Server:** verify.onhandi.com
+- **Dashboard:** app.onhandi.com  
+- **Database:** nyumban9_mpwa1
+- **Built by:** kinflux
 
 ---
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-### Coding Standards
-- Follow PSR-12 coding style
-- Use strict types: `declare(strict_types=1);`
-- Document public methods with PHPDoc
-- Write tests for new features (future)
+*KinfluxAPI - WhatsApp API Platform*
+*Powered by Baileys + Custom PHP MVC + Node.js*
+```
 
 ---
 
-## 📄 License
-
-LeadFlux is proprietary software. All rights reserved.
-
 ---
 
-## 🆘 Support
-
-- 📧 Email: support@leadflux.app
-- 🐛 Issues: [GitHub Issues](https://github.com/yourorg/leadflux/issues)
-- 📚 Docs: [Wiki](https://github.com/yourorg/leadflux/wiki)
-
----
-
-> **LeadFlux** — Turn leads into conversations, automatically. 🚀
-
-*Built with ❤️ by kinflux digital*
+Run that first and share output then we start building the **landing page** and **auth pages**! 🚀
