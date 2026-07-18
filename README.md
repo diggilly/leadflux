@@ -1,6 +1,3 @@
-Now I have the FULL picture. Let me write the complete README then we build:
-
-```markdown
 # KinfluxAPI - WhatsApp API Platform
 > Built on custom PHP MVC Framework + Node.js Baileys
 
