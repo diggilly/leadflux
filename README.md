@@ -434,9 +434,3 @@ contact_groups        # Contact grouping
 *KinfluxAPI - WhatsApp API Platform*
 *Powered by Baileys + Custom PHP MVC + Node.js*
 ```
-
----
-
----
-
-Run that first and share output then we start building the **landing page** and **auth pages**! 🚀
